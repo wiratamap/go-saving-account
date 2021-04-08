@@ -5,7 +5,12 @@ import (
 )
 
 type Account struct {
-	balance int
+	balance      int
+	transactions []Transaction
+}
+
+func NewAccount(balance int) Account {
+	return Account{balance: balance, transactions: []Transaction{}}
 }
 
 func (account *Account) GetBalance() int {
@@ -13,7 +18,8 @@ func (account *Account) GetBalance() int {
 }
 
 func (account *Account) Credit(amount int) {
-	account.balance = account.balance + amount
+	account.balance += amount
+	account.transactions = append(account.transactions, Transaction{amount, CREDIT})
 }
 
 func (account *Account) Debit(amount int) error {
@@ -23,6 +29,11 @@ func (account *Account) Debit(amount int) error {
 	if amount > account.balance {
 		return errors.New("AmountExceedingBalanceError")
 	}
-	account.balance = account.balance - amount
+	account.balance -= amount
+	account.transactions = append(account.transactions, Transaction{amount, DEBIT})
 	return nil
+}
+
+func (account *Account) GetTransactions() []Transaction {
+	return account.transactions
 }
