@@ -5,7 +5,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestAccount(t *testing.T)  {
+func TestAccount(t *testing.T) {
 	t.Run("GetBalance", func(t *testing.T) {
 		t.Run("should return 10000 when account balance is 10000", func(t *testing.T) {
 			expectedBalance := 10_000
@@ -23,6 +23,39 @@ func TestAccount(t *testing.T)  {
 			account.Credit(10_000)
 
 			assert.Equal(t, expectedBalance, account.GetBalance())
+		})
+	})
+
+	t.Run("Debit", func(t *testing.T) {
+		t.Run("should deduct balance to 40000 when debit 10000 from account", func(t *testing.T) {
+			expectedBalance := 40_000
+			account := Account{50_000}
+
+			account.Debit(10_000)
+
+			assert.Equal(t, expectedBalance, account.GetBalance())
+		})
+
+		t.Run("should not deduct balance and throw error when debit amount is less than 1", func(t *testing.T) {
+			expectedBalance := 50_000
+			expectedError := "InvalidAmountError"
+			account := Account{50_000}
+
+			error := account.Debit(-50_000)
+
+			assert.Equal(t, expectedBalance, account.GetBalance())
+			assert.Equal(t, expectedError, error.Error())
+		})
+
+		t.Run("should not deduct balance and throw error when debit amount is less than 1", func(t *testing.T) {
+			balance := 10_000
+			expectedError := "AmountExceedingBalanceError"
+			account := Account{balance}
+
+			error := account.Debit(100_000)
+
+			assert.Equal(t, balance, account.GetBalance())
+			assert.Equal(t, expectedError, error.Error())
 		})
 	})
 }
