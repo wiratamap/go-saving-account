@@ -37,3 +37,13 @@ func (account *Account) Debit(amount int) error {
 func (account *Account) GetTransactions() []Transaction {
 	return account.transactions
 }
+
+func (account *Account) RecentTransactionsByType(transactionType TransactionType) []Transaction {
+	var filteredTransactions []Transaction
+	for _, transaction := range account.transactions {
+		if transaction.transactionType == transactionType {
+			filteredTransactions = append(filteredTransactions, transaction)
+		}
+	}
+	return filteredTransactions
+}

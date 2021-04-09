@@ -87,4 +87,32 @@ func TestAccount(t *testing.T) {
 			assert.Equal(t, expectedTransactions, transactions)
 		})
 	})
+
+	t.Run("RecentTransactionsByType", func(t *testing.T) {
+		t.Run("should return credit transactions only when filter credit only", func(t *testing.T) {
+			var expectedTransactions []Transaction
+			creditTransaction := Transaction{10_000, CREDIT}
+			expectedTransactions = append(expectedTransactions, creditTransaction)
+			account := NewAccount(10_000)
+			account.Credit(10_000)
+			account.Debit(10_000)
+
+			transactions := account.RecentTransactionsByType(CREDIT)
+
+			assert.Equal(t, expectedTransactions, transactions)
+		})
+
+		t.Run("should return debit transactions only when filter debit only", func(t *testing.T) {
+			var expectedTransactions []Transaction
+			creditTransaction := Transaction{5_000, DEBIT}
+			expectedTransactions = append(expectedTransactions, creditTransaction)
+			account := NewAccount(10_000)
+			account.Credit(10_000)
+			account.Debit(5_000)
+
+			transactions := account.RecentTransactionsByType(DEBIT)
+
+			assert.Equal(t, expectedTransactions, transactions)
+		})
+	})
 }
