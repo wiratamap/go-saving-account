@@ -2,6 +2,7 @@ package main
 
 import (
 	"testing"
+
 	"github.com/stretchr/testify/assert"
 )
 
@@ -24,6 +25,18 @@ func TestAccount(t *testing.T) {
 
 			assert.Equal(t, expectedBalance, account.GetBalance())
 		})
+
+		t.Run("should not add balance and throw error when credit amount is less than 1", func(t *testing.T) {
+			expectedBalance := 10_000
+			expectedError := "InvalidAmountError"
+			account := NewAccount(10_000)
+
+			error := account.Credit(-50_000)
+
+			assert.Equal(t, expectedBalance, account.GetBalance())
+			assert.Equal(t, expectedError, error.Error())
+		})
+
 	})
 
 	t.Run("Debit", func(t *testing.T) {

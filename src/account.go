@@ -17,9 +17,13 @@ func (account *Account) GetBalance() int {
 	return account.balance
 }
 
-func (account *Account) Credit(amount int) {
+func (account *Account) Credit(amount int) error {
+	if amount <= 0 {
+		return errors.New("InvalidAmountError")
+	}
 	account.balance += amount
 	account.transactions = append(account.transactions, Transaction{amount, CREDIT})
+	return nil
 }
 
 func (account *Account) Debit(amount int) error {
